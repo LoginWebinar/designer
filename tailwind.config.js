@@ -7,12 +7,25 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors:{
+        chocolate: {
+          400 : "#121212",
+          500: "rgb(18,18,18,1)",
+        }
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      fontFamily: {
+        "fredoka": "var(--font-fredoka)",
+        "body": "var(--font-roboto)",
+        "roboto": "var(--font-roboto)",
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    require("@tailwindcss/typography"),
+  ],
 }

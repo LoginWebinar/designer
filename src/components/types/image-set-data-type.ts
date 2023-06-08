@@ -5,10 +5,11 @@ export type ImageSetDataType = {
   objectID?:string,
   id?:string,
   title:string,
+  description:string,
+  displayIsNew:boolean,
+  isPublished:boolean,
   adType:string[],
-  keywords:string[],
+  keywords:string,
   thumbnails: ThumbnailDataType[],
   avatars:AvatarDataType[],
-  
-  
 }

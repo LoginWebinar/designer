@@ -1,21 +1,22 @@
 import React, {useState} from "react";
 import algoliasearch from "algoliasearch/lite";
 import { InstantSearch, SearchBox,Hits,DynamicWidgets,RefinementList,Menu,Configure,useInstantSearch } from "react-instantsearch-hooks-web";
-import ImageSetCard from "../image-set-card/image-set-card";
-import { ImageSetDataType } from "../types/image-set-data-type";
-import UseGetImageSet from "../image-set-card/components/hooks/use-get-imageset";
+import AvatarSetCard from "../avatar-set-card/avatar-set-card";
+import { AvatarSetDataType } from "../types/avatar-set-data-type";
+// import UseGetImageSet from "../image-set-card/components/hooks/use-get-imageset";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 
 const searchClient = algoliasearch("9UVNMIEHAV","2167b0e6a51f8fe71e703075073b52c4");
 
 interface ChildProps {
-  selectedImage: (Id:string,data:any) => void;
+  selectedImage: (docId:string,data:any) => void;
   createNewImage: ()=>void;
+  actionWord:string,
 }
 
 
 
-export default function AlgoliaDezzieSetSearch(props:ChildProps){
+export default function AlgoliaAvatarSetSearch(props:ChildProps){
   const [showResults, setShowResults] = useState(false);
 
   function EmptyQueryBoundary({ children, fallback }:{children:any,fallback:any}) {
@@ -37,19 +38,17 @@ export default function AlgoliaDezzieSetSearch(props:ChildProps){
     return children;
   }
 
-  const imageSelection = async(dezziId:string)=>{
-    const getImageSet = UseGetImageSet();
-    const buildSelectedImage = await getImageSet(dezziId);
-    props.selectedImage(dezziId,buildSelectedImage);
+  const imageSelection = async(docId:string,data:AvatarSetDataType )=>{
+    props.selectedImage(docId,data);
   }
 
 
   function Hit({ hit }:{hit:any}) {
     const _unknown =hit as unknown;
-    const imageCardData = _unknown as ImageSetDataType;
+    const imageCardData = _unknown as AvatarSetDataType;
     return (
     <>
-      <ImageSetCard imageCardData={imageCardData} onClick={imageSelection} />
+      <AvatarSetCard imageCardData={imageCardData} onClick={imageSelection} actionWord={props.actionWord} />
     </>
     );
   }
@@ -57,11 +56,11 @@ export default function AlgoliaDezzieSetSearch(props:ChildProps){
   
 
   return (
-    <InstantSearch searchClient={searchClient} indexName="dezzi_sets" >
-      <div className="bg-gray-800 px-6 py-18 sm:py-24 lg:px-8">
+    <InstantSearch searchClient={searchClient} indexName="avatar_sets" >
+      <div className="px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <div className="inline-flex">
-            <h2 className="text-2xl font-bold tracking-tight text-white sm:text-4xl mr-4">Search for Dezzi Set</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-white sm:text-4xl mr-4">Avatar Search</h2>
             <button
               onClick={props.createNewImage}
               type="button"
@@ -75,7 +74,7 @@ export default function AlgoliaDezzieSetSearch(props:ChildProps){
          
 
           <SearchBox  
-            placeholder="Search for Designs"
+            placeholder="Search for Avatar"
             searchAsYouType={true}
             classNames={{
               root: 'p-3 shadow-sm w-full',
@@ -86,18 +85,14 @@ export default function AlgoliaDezzieSetSearch(props:ChildProps){
          
         </div>
       </div>
-      <div className="w-full grow lg:flex">
-        <div className="flex-1 xl:flex">
-          
+      <div id="avatar-hits" className="w-full flex flex-row flex-wrap justify-center">
+          <EmptyQueryBoundary fallback={""} >
             <NoResultsBoundary fallback={"No results"} >
             {showResults && 
-              <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
                 <Hits hitComponent={Hit}/>
-              </div>
             }
             </NoResultsBoundary>
-          
-        </div>
+          </EmptyQueryBoundary>
       </div>
     </InstantSearch>
   )

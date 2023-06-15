@@ -1,3 +1,4 @@
+
 export type ImageMainDataType = {
   title:string,
   description:string,

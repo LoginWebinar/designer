@@ -119,6 +119,14 @@ input::-moz-focus-inner {
   border: 0; 
 }
 
+#avatar-hits .ais-Hits-list {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-gap: 10px;
+  width: 100%;
+}
+
+
 
 @media screen and (max-width: 768px){
   .container-slider {

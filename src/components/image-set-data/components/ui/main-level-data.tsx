@@ -8,7 +8,7 @@ import UseGetImageSet from "../hooks/use-update-imageset";
 import AdTypesField from "./ad-types-field";
 
 interface ChildProps {
-  data: ImageMainDataType|null,
+  data: ImageMainDataType|undefined,
   docId:string,
 }
 
@@ -23,7 +23,7 @@ export default function ImageMainLevelData(props:ChildProps){
   const updateImageSet = UseGetImageSet();
 
   useEffect(()=>{
-    if (props.data!=null){
+    if (props.data!=undefined){
       setTitle(props.data?.title);
       setDescription(props.data?.description);
       setDisplayIsNew(props.data?.displayIsNew);

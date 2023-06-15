@@ -11,3 +11,13 @@
         placeholder="Title"
       />
     </div>
+
+
+    {avatarData !== undefined ? avatarData[0].description : null }
+          {avatarData !== undefined && avatarData.map((avatar,index)=>(
+            <li key={avatar.id}>{avatar.description}</li>
+          ))}
+
+          {avatarData?.map((avatar,index)=>(
+            <li key={avatar.id}>{avatar.description}</li>
+          ))}

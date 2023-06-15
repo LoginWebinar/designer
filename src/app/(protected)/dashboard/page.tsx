@@ -6,9 +6,12 @@ import { useRouter } from "next/navigation";
 import SidePanel from "@/components/side-panel/side-panel";
 import NavBar from "@/components/navbar/navbar";
 import AlgoliaDezzieSetSearch from "../../../components/algolia-dezzieset-search/algolia-dezzieset-search";
+import AlgoliaAvatarSetSearch from "../../../components/algolia-avatarset-search/algolia-avatarset-search";
 import ImageSetData from "@/components/image-set-data/image-set-data";
 
+
 import { ImageSetDataType } from "../../../components/types/image-set-data-type";
+import { AvatarSetDataType } from "@/components/types/avatar-set-data-type";
 
 
 function classNames(...classes:any) {
@@ -22,8 +25,10 @@ export default function DashboardPage(){
   const [ showDezziSets, setShowDezziSets ] = useState(true);
   const [ showAvatars, setShowAvatars ] = useState(false);
   const [ showDezziSetData, setShowDezziSetData] = useState(false);
-  const [ imageSetDataToEdit, setImageSetDataToEdit] = useState<ImageSetDataType|null>(null);
+  const [ imageSetDataToEdit, setImageSetDataToEdit] = useState<ImageSetDataType>();
   const [ imageSetDataDocId, setImageSetDataDocId] = useState("");
+  const [ avatarSetDataToEdit, setAvatarSetDataToEdit ] = useState<AvatarSetDataType>();
+  const [ avatarSetDataDocId, setAvatarSetDataDocId] = useState("");
 
   const router = useRouter();
 
@@ -64,15 +69,30 @@ export default function DashboardPage(){
     setShowDezziSets(()=>false);
   }
 
+  function editAvatarWithId(docId:string,data:AvatarSetDataType){
+    /**
+     * this function will set the DezziId of what to work on based on what the
+     * use has selected from any of the image Dezzi Cards. The useEffect
+     * is listening to any of the changes of this value and will update the screens to show
+     */
+    setAvatarSetDataToEdit(()=>data);
+    setAvatarSetDataDocId(()=>docId);
+
+  }
+
   function createNewDezzieSet(){
     /**
      * This function will allow a new image dezzie set to be created
      */
-    setImageSetDataToEdit(()=>null);
+    setImageSetDataToEdit(()=>undefined);
     setImageSetDataDocId(()=>"");
-    setShowDezziSetData(()=>true);
     setShowAvatars(()=>false);
     setShowDezziSets(()=>false);
+    setShowDezziSetData(()=>true);
+  }
+
+  function createNewAvatarSet(){
+
   }
 
   return(
@@ -86,11 +106,11 @@ export default function DashboardPage(){
             { showDezziSets &&
               <AlgoliaDezzieSetSearch selectedImage={editImageDezziWithId} createNewImage={createNewDezzieSet}/>
             }
-            { showDezziSetData && 
+            { showDezziSetData && imageSetDataToEdit!==undefined &&
               <ImageSetData imageSetDataToEdit={imageSetDataToEdit} docId={imageSetDataDocId}/>
             }
             { showAvatars &&
-              <p className="text-white">Avatars</p>
+              <AlgoliaAvatarSetSearch selectedImage={editAvatarWithId} createNewImage={createNewAvatarSet} actionWord="Edit"/>
             }
             
           </div>

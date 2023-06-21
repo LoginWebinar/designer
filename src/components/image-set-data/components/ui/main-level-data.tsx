@@ -1,9 +1,9 @@
 "use client";
 import {useState, useEffect } from "react";
 import { ImageMainDataType } from "../../../types/image-main-data-type";
-import InputField from "./input-field";
-import TextAreaField from "./text-area-field";
-import CheckBoxField from "./checkbox-field";
+import InputField from "@/components/ui/input-field";
+import TextAreaField from "@/components/ui/text-area-field";
+import CheckBoxField from "@/components/ui/checkbox-field";
 import UseGetImageSet from "../hooks/use-update-imageset";
 import AdTypesField from "./ad-types-field";
 

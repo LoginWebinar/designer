@@ -8,6 +8,7 @@ import NavBar from "@/components/navbar/navbar";
 import AlgoliaDezzieSetSearch from "../../../components/algolia-dezzieset-search/algolia-dezzieset-search";
 import AlgoliaAvatarSetSearch from "../../../components/algolia-avatarset-search/algolia-avatarset-search";
 import ImageSetData from "@/components/image-set-data/image-set-data";
+import AvatarNewData from "@/components/avatar-new-data/avatar-new-data";
 
 
 import { ImageSetDataType } from "../../../components/types/image-set-data-type";
@@ -25,10 +26,17 @@ export default function DashboardPage(){
   const [ showDezziSets, setShowDezziSets ] = useState(true);
   const [ showAvatars, setShowAvatars ] = useState(false);
   const [ showDezziSetData, setShowDezziSetData] = useState(false);
+  const [ showNewAvatar, setShowNewAvatar] = useState(false);
   const [ imageSetDataToEdit, setImageSetDataToEdit] = useState<ImageSetDataType>();
   const [ imageSetDataDocId, setImageSetDataDocId] = useState("");
   const [ avatarSetDataToEdit, setAvatarSetDataToEdit ] = useState<AvatarSetDataType>();
-  const [ avatarSetDataDocId, setAvatarSetDataDocId] = useState("");
+  const [ avatarSetDataDocId, setAvatarSetDataDocId] = useState<string>("");
+  
+
+  const toggleNewAvatarShowHandler = ()=>{
+    setShowAvatars(()=>true);
+    setShowNewAvatar(p=>!p)
+  };
 
   const router = useRouter();
 
@@ -46,10 +54,12 @@ export default function DashboardPage(){
     setShowDezziSetData(()=>false);
     switch (pref){
       case "Avatars":
+        setShowNewAvatar(()=>false);
         setShowAvatars(()=>true);
         setShowDezziSets(()=>false);
         break;
       default:
+        setShowNewAvatar(()=>false);
         setShowAvatars(()=>false);
         setShowDezziSets(()=>true);
         break;
@@ -66,6 +76,7 @@ export default function DashboardPage(){
     setImageSetDataDocId(()=>docId);
     setShowDezziSetData(()=>true);
     setShowAvatars(()=>false);
+    setShowNewAvatar(()=>false);
     setShowDezziSets(()=>false);
   }
 
@@ -88,11 +99,20 @@ export default function DashboardPage(){
     setImageSetDataDocId(()=>"");
     setShowAvatars(()=>false);
     setShowDezziSets(()=>false);
+    setShowNewAvatar(()=>false);
     setShowDezziSetData(()=>true);
   }
 
   function createNewAvatarSet(){
-
+    /**
+     * This function will allow a new Avatar set to be created
+     */
+    setImageSetDataToEdit(()=>undefined);
+    setImageSetDataDocId(()=>"");
+    setShowAvatars(()=>false);
+    setShowDezziSets(()=>false);
+    setShowDezziSetData(()=>false);
+    setShowNewAvatar(()=>true);
   }
 
   return(
@@ -112,6 +132,10 @@ export default function DashboardPage(){
             { showAvatars &&
               <AlgoliaAvatarSetSearch selectedImage={editAvatarWithId} createNewImage={createNewAvatarSet} actionWord="Edit"/>
             }
+            { showNewAvatar &&
+             <AvatarNewData toggleShow={toggleNewAvatarShowHandler} docId={setAvatarSetDataDocId}/>
+            }
+            
             
           </div>
         </main>

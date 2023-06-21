@@ -117,7 +117,8 @@ export default function ImageMainLevelData(props:ChildProps){
   }
 
   function createNewAvatarSet(){
-
+    console.log("New Avatar");
+    toggleSearchAvatarHandler();
   }
   
   return (

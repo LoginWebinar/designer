@@ -1,6 +1,6 @@
 "use client";
 import { useState,useEffect } from "react";
-import CheckBoxField from "./checkbox-field";
+import CheckBoxField from "../../../ui/checkbox-field";
 
 interface ChildProps {
   adTypeArray:string[],

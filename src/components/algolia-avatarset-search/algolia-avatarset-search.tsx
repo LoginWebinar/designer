@@ -3,7 +3,6 @@ import algoliasearch from "algoliasearch/lite";
 import { InstantSearch, SearchBox,Hits,DynamicWidgets,RefinementList,Menu,Configure,useInstantSearch } from "react-instantsearch-hooks-web";
 import AvatarSetCard from "../avatar-set-card/avatar-set-card";
 import { AvatarSetDataType } from "../types/avatar-set-data-type";
-// import UseGetImageSet from "../image-set-card/components/hooks/use-get-imageset";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 
 const searchClient = algoliasearch("9UVNMIEHAV","2167b0e6a51f8fe71e703075073b52c4");

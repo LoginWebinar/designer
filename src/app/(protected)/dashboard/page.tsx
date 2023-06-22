@@ -115,6 +115,13 @@ export default function DashboardPage(){
     setShowNewAvatar(()=>true);
   }
 
+  function createdAvatarData(docId:string,data:object){
+    /**
+     * this function runs after a user creates a new avatar
+     */
+    
+  }
+
   return(
     <>
     <div>
@@ -133,7 +140,7 @@ export default function DashboardPage(){
               <AlgoliaAvatarSetSearch selectedImage={editAvatarWithId} createNewImage={createNewAvatarSet} actionWord="Edit"/>
             }
             { showNewAvatar &&
-             <AvatarNewData toggleShow={toggleNewAvatarShowHandler} docId={setAvatarSetDataDocId}/>
+             <AvatarNewData toggleShow={toggleNewAvatarShowHandler} createdAvatarData={createdAvatarData}/>
             }
             
             

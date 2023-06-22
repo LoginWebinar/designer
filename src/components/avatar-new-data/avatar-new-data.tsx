@@ -8,10 +8,11 @@ import { uploadBytes,getDownloadURL,ref } from "firebase/storage";
 import { nanoid } from "nanoid";
 import UseCreateAvatar from "./components/hooks/use-create-avatar";
 import SpinnerForButton from "@/components/spinners/spinner-for-button";
+import { AvatarSetDataType } from "@/components/types/avatar-set-data-type";
 
 interface ChildProps {
   toggleShow: any;
-  docId: (docid:string)=>void;
+  createdAvatarData: (docid:string,data:AvatarSetDataType)=>void;
 }
 
 export default function AvatarNewData(props:ChildProps){
@@ -69,9 +70,15 @@ export default function AvatarNewData(props:ChildProps){
        */
     const x = await createAvatar(description,uploadedFaceURL,uploadedFullBodyURL,dndSecrets,gender,race)
     if (x!=undefined){
-      props.docId(x);
+      const data:AvatarSetDataType = {
+        description:description,
+        objectID:x,
+        docId:x,
+        url:uploadedFullBodyURL,
+        faceUrl:uploadedFaceURL,
+      };
+      props.createdAvatarData(x,data);
     }
-    toggleShow();
 
   }
 

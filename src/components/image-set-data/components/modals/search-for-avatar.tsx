@@ -68,16 +68,16 @@ function SearchForAvatar(props:ChildProps){
 
                     <AlgoliaAvatarSetSearch selectedImage={props.selectAvatarWithId} createNewImage={props.createNewAvatarSet} actionWord="Select"/>
 
-                      <div className="mt-5 sm:mt-6 flex justify-end">
-                          <button
-                              type="button"
-                              className="inline-flex rounded-md bg-red-600 px-3 py-2 my-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:w-auto md:ml-4"
-                              onClick={() => toggleShow()}
-                          >
-                              Cancel
-                          </button>
-                      
-                      </div>
+                    <div className="mt-5 sm:mt-6 flex justify-end">
+                        <button
+                            type="button"
+                            className="inline-flex rounded-md bg-red-600 px-3 py-2 my-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:w-auto md:ml-4"
+                            onClick={() => toggleShow()}
+                        >
+                            Cancel
+                        </button>
+                    
+                    </div>
                   </Dialog.Panel>
                   </Transition.Child>
               </div>

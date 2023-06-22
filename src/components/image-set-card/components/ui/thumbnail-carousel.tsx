@@ -46,7 +46,7 @@ export function ThumbnailCarousel(props:ChildProps){
           <div className="absolute top-0 rounded-lg right-0 bg-black">
             <span className="p-4 text-white z-[10]" >{thumbnail.description}</span>
           </div>
-          <img src={thumbnail.url.toString()} />
+          <img src={thumbnail.url.toString()} alt={thumbnail.description}/>
 
           <ThumbnailCarouselButtons moveSlide={nextSlide} direction={"next"} />
           <ThumbnailCarouselButtons moveSlide={prevSlide} direction={"prev"} />

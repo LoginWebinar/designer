@@ -1,6 +1,7 @@
 export type ThumbnailDataType = {
-  id:string,
+  id:number,
   description:string,
   url:string,
   size:string,
+  assetDocId:string,
 }

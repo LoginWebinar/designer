@@ -20,6 +20,7 @@ export default function ModelAvatarModal(props:ChildProps) {
         className="w-8 h-8 ml-2 md:h-10 md:w-10 rounded-md border-2 border-indigo-60 hover:cursor-pointer"
         src={props.avatarFace.toString()}
         onClick={toggleOpenHandler}
+        alt={props.avatarDescription}
     />
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-[1000]" onClose={setOpen}>
@@ -60,7 +61,7 @@ export default function ModelAvatarModal(props:ChildProps) {
                 <div className="sm:flex sm:items-start">
                   <div className="mx-auto flex items-center justify-center">
 
-                    <img src={props.avatarImage} className="max-w-48 w-32 md:w-48" aria-hidden="true" />
+                    <img src={props.avatarImage} className="max-w-48 w-32 md:w-48" aria-hidden="true" alt={props.avatarDescription} />
 
                   </div>
                   <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">

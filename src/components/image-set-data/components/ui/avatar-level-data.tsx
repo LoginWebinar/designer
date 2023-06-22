@@ -8,30 +8,39 @@ import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import SearchForAvatar from "../modals/search-for-avatar";
 import { AvatarSetDataType } from "@/components/types/avatar-set-data-type";
 import UpdateAvatarData from "../modals/update-avatar-data";
-import UseGetImageSet from "../hooks/use-update-imageset";
+import CreateAvatar from "../modals/create-avatar";
 
+import UseGetImageSet from "../hooks/use-update-imageset";
+import UseAddDezziIdToAvatar from "../hooks/use-add-dezzisid-to-avatar";
+import UseRemoveDezziIdfromAvatar from "../hooks/use-remove-dezziid-from-avatar";
 
 interface ChildProps {
   data: AvatarDataType[],
   docId:string,
 }
 
-
-
 export default function ImageMainLevelData(props:ChildProps){
   const [ avatarData, setAvatarData]=useState<AvatarDataType[]>(props.data);
   const [ showAddAvatar, setShowAddAvatar ] = useState(true);
+  const [ showCreateAvatar, setShowCreateAvatar ] = useState(false);
   const [ displayAvatarDataVisible,setDisplayAvatarDataVisible] = useState(false);
   const [ displaySearchAvatarVisible,setDisplaySearchAvatarVisible] = useState(false);
   const [ avatarItem, setAvatarItem ] = useState<AvatarDataType>();
   const [ saveAvatarData, setSaveAvatarData ] = useState(false);
-  const [ showAlgoliaSearch, setShowAlgoliaSearch] = useState(false);
-  const [ avatarDocId, setAvatarDocId] = useState("");
+  
 
   const toggleAvatarDataShowHandler = ()=>{setDisplayAvatarDataVisible(p=>!p)};
-  const toggleSearchAvatarHandler = ()=>{setDisplaySearchAvatarVisible(p=>!p)};
+  const toggleSearchAvatarHandler = ()=>{ 
+    setDisplaySearchAvatarVisible(p=>!p);
+  };
+
+  const toggleCreateAvatarShowHandler = () =>{
+    setShowCreateAvatar(p=>!p)
+  };
 
   const updateImageSet = UseGetImageSet();
+  const addDezziIdToAvatar = UseAddDezziIdToAvatar();
+  const removeDezziIdFromAvatar = UseRemoveDezziIdfromAvatar();
 
   useEffect(()=>{
     if (saveAvatarData){
@@ -42,16 +51,13 @@ export default function ImageMainLevelData(props:ChildProps){
     const y = avatarData.length;
     if (y>=5){
       setShowAddAvatar(()=>false);
-    }
-    else{
+    }else{
       setShowAddAvatar(()=>true);
     }
   },[saveAvatarData]);
 
   const addAvatar = () =>{
-    setShowAlgoliaSearch(()=>true);
-    toggleSearchAvatarHandler();
-    console.log(avatarData);
+    setDisplaySearchAvatarVisible(()=>true);
   }
 
   const updateAvatarOrder = (items:AvatarDataType[])=>{
@@ -71,9 +77,21 @@ export default function ImageMainLevelData(props:ChildProps){
   }
 
   const deleteAvatarData = (id:number)=>{
+
     const _avatarData = avatarData.filter(data=> data.id !==id)
     setAvatarData(()=>_avatarData);
+    /**
+     * find the selected docid of the avatar from the id
+     */
+    const _selectedAvatarData = avatarData.filter(data=> data.id ==id);
+    removeDezziIdFromAvatar(_selectedAvatarData[0].docId ,props.docId);
+
+    /**
+     * Tell the useEffect to now save the data to the imagedezziset table
+     */
     setSaveAvatarData(()=>true);
+
+    
   }
 
   const updateAvatarData = (description:string)=>{
@@ -112,13 +130,54 @@ export default function ImageMainLevelData(props:ChildProps){
     _selectedAvatar = {id:_id,description:data.description,faceUrl:data.faceUrl,url:data.url,docId:docId}
     _avatarData.push(_selectedAvatar);
     setAvatarData(()=>_avatarData);
+
+    /**
+     * add the DezziId to the avatar table
+     */
+    addDezziIdToAvatar(docId,props.docId)
+    
     setSaveAvatarData(()=>true);
-    toggleSearchAvatarHandler();
+    setDisplaySearchAvatarVisible(()=>false);
+
   }
 
   function createNewAvatarSet(){
-    console.log("New Avatar");
-    toggleSearchAvatarHandler();
+    /**
+     * this occurs when the user was in the search avatar and click on the new button
+     * Prepare the system for the creation of an avatar
+     */
+    setDisplaySearchAvatarVisible(()=>false);
+    setShowCreateAvatar(()=>true);
+  }
+
+  function newAvatarReadyToUseForDezzieSet(docId:string,data:AvatarSetDataType){
+    if (docId==""){
+      setShowCreateAvatar(()=>false);
+      return;
+    }
+    
+    let _selectedAvatar:AvatarDataType;
+    const _id= getAvatarID();
+    const _avatarData = avatarData;
+    _selectedAvatar = {id:_id,description:data.description,faceUrl:data.faceUrl,url:data.url,docId:docId}
+    _avatarData.push(_selectedAvatar);
+
+    /**
+     * This will then save the dezziID to the avatar file
+     */
+    addDezziIdToAvatar(docId,props.docId);
+
+    setAvatarData(()=>_avatarData);
+    setSaveAvatarData(()=>true);
+
+    /**
+     * close the windows
+     */
+    
+    setShowCreateAvatar(()=>false);
+    setShowAddAvatar(()=>false);
+    setDisplaySearchAvatarVisible(()=>false);
+    
   }
   
   return (
@@ -136,8 +195,10 @@ export default function ImageMainLevelData(props:ChildProps){
               Find
             </button>
             <SearchForAvatar show={displaySearchAvatarVisible} toggleShow={toggleSearchAvatarHandler} selectAvatarWithId={selectAvatarWithId} createNewAvatarSet={createNewAvatarSet}/> 
-        </>
-      }
+            <CreateAvatar show={showCreateAvatar} toggleShow={toggleCreateAvatarShowHandler} useAvatarData={newAvatarReadyToUseForDezzieSet}/>    
+          </>
+        }
+        
       </div>
       {avatarData !== undefined &&
           <>
@@ -172,7 +233,7 @@ export default function ImageMainLevelData(props:ChildProps){
                           deleteAvatarData(id)
                         }}
                       >
-                        Delete
+                        Remove
                       </button>
                     </div>
                     
@@ -187,6 +248,9 @@ export default function ImageMainLevelData(props:ChildProps){
         {avatarItem !== undefined &&
           <UpdateAvatarData show={displayAvatarDataVisible} toggleShow={toggleAvatarDataShowHandler} data={avatarItem} onUpdate={updateAvatarData} />
         }
+        
+        
+      
         
         </>
       }

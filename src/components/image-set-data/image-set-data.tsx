@@ -3,6 +3,7 @@ import {useState, useEffect } from "react";
 import { ImageSetDataType } from "../types/image-set-data-type";
 import AvatarLevelData from "./components/ui/avatar-level-data";
 import ImageMainLevelData from "./components/ui/main-level-data";
+import AssetLevelData from "./components/ui/asset-level-data";
 
 interface ChildProps {
   imageSetDataToEdit: ImageSetDataType,
@@ -17,6 +18,7 @@ export default function ImageSetData(props:ChildProps){
     <>
     <ImageMainLevelData data={imageData} docId={props.docId}/>
     <AvatarLevelData data={imageData.avatars}  docId={props.docId} />
+    <AssetLevelData data={imageData.thumbnails} docId={props.docId} />
     
     </>
   );

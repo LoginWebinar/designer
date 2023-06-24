@@ -21,3 +21,41 @@
           {avatarData?.map((avatar,index)=>(
             <li key={avatar.id}>{avatar.description}</li>
           ))}
+
+
+          { selectedAssetLayers && 
+                      <SortableList 
+                        items={selectedAssetLayers} 
+                        onChange={(e)=>updateAssetLayerOrder(e)}
+                        renderItem={item=>{
+                          return <>
+                            <SortableList.Item id={item.id}>
+                              <div className="grid grid-cols-3 gap-2 max-w-[300px]">
+                                <div>
+                                  <p className="text-xs">{item.type}</p>
+                                  <button
+                                    value={item.id}
+                                    type="button"
+                                    className="rounded-full bg-orange-600 px-2.5 py-.5 text-xs font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    onClick={(e)=>{
+                                      let id= parseInt(e.currentTarget.value);
+                                      deleteAssetLayerData(id);
+                                    }}
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              
+                                
+                                <div className="grid grid-rows-3 gap-2 ml-3">
+                                 
+                                </div>
+                              </div>
+                              
+                              <SortableList.DragHandle />
+                            </SortableList.Item>
+                          </>
+                          }
+                        }
+                      />
+                    }

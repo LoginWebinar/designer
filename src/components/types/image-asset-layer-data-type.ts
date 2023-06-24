@@ -10,4 +10,5 @@ export type ImageAssetLayerDataType ={
   xPosition?:number,
   yPosition?:number,
   height?:number,
+  fontEmphasis?:string,
 }

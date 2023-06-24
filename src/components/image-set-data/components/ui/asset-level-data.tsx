@@ -1,16 +1,22 @@
 "use client";
 import {useState, useEffect } from "react";
 import { SortableList } from "../../../sortable-list/sortable-list";
+import { VerticalSortableList } from "../../../sortable-list/vertical-sortable-list";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 
-import {ThumbnailDataType} from "@/components/types/thumbnail-data-type";
+import { ThumbnailDataType } from "@/components/types/thumbnail-data-type";
 import { ImageAssetDataType } from "@/components/types/image-asset-data-type";
 import { ImageAssetLayerDataType } from "@/components/types/image-asset-layer-data-type";
 
 import CanvasDropDown from "../../../ui/canvas-drop-down";
+import TextLayerDataFields from "./text-layer-data-fields";
+import AssetLayerDataFields from "./asset-layer-data-fields";
+import AvatarLayerDataFields from "./avatar-layer-data-fields";
+import LogoLayerDataFields from "./logo-layer-data-fields";
 import DescriptionDropDown from "@/components/ui/description-drop-down";
 
 import UseGetImageSet from "../hooks/use-update-imageset";
+import UseGetDezziAsset from "../hooks/use-get-dezzi-asset";
 
 interface ChildProps {
   data:ThumbnailDataType[];
@@ -30,6 +36,7 @@ export default function AssetLevelData(props:ChildProps){
   const [ selectedAssetLayers, setSelectedAssetLayers ] = useState<ImageAssetLayerDataType[]>();
 
   const updateImageSet = UseGetImageSet();
+  const getDezziAsset = UseGetDezziAsset();
 
   useEffect(()=>{
     if (saveThumbnailData){
@@ -38,19 +45,33 @@ export default function AssetLevelData(props:ChildProps){
     }
   },[saveThumbnailData]);
 
-  const updateAssetLayerData = (id:number) =>{
+  const getAssetLayerData = async (assetDocId:string)=>{
+    /**
+     * this function by passing in the AsssetDocId of the dezzi will return the
+     * selected layers and put them in state to use
+     */
+    const assetLayers = await getDezziAsset(props.docId,assetDocId);
+    console.log("Layers",assetLayers);
+    setSelectedAssetData(()=>assetLayers);
+    setSelectedAssetLayers(()=>assetLayers?.layers);
+  
+  }
+
+  const updateAssetLayerData = async(id:number) =>{
     /**
      * this function occurs when the user clicks on edit the layer
      * the layer cannot be change of its type. In order to change the layer type, the
      * user must delete and add new
      */
-
   }
+
+
 
   const updateAssetData = (id:number) =>{
     const obj = thumbnailData.find(o=>o.id=== id);
     if (obj){
       setSelectedAssetDocId(()=>obj.assetDocId);
+      getAssetLayerData(obj.assetDocId);
       setSelectedThumbnailData(()=>obj);
       setDisplayDuplicateUI(()=>false);
       setDisplayDeleteUI(()=>false);
@@ -94,6 +115,21 @@ export default function AssetLevelData(props:ChildProps){
       
   
     }
+  }
+
+  const assetLayerDataById= (id:number)=>{
+    /**
+     * This occurs when the user clicks on the delete button
+     * to remove the layer. The layer should be deleted from the table
+     * 
+     */
+    const obj = selectedAssetLayers?.find(o=>o.id=== id);
+    return obj;
+    // if (obj){
+    //   return obj;  
+    // }else{
+    //   return undefined;
+    // }
   }
 
   
@@ -248,8 +284,8 @@ export default function AssetLevelData(props:ChildProps){
                   <div className="mt-4"></div>
                   <CanvasDropDown />
                 </div>
-                <div className="pl-4">
-                  <div className="flex flex-row gap-4">
+                <div className="grow mb-2 md:ml-4">
+                  <div className="flex flex-row gap-4 mb-2">
                     <h3 className="text-sm">Layers</h3>
                     <button
                       onClick={addAsset}
@@ -260,57 +296,47 @@ export default function AssetLevelData(props:ChildProps){
                       Add
                     </button>
                   </div>
-                  <div className="flex-initial md:max-w-sm">
-                    { selectedAssetLayers && 
-                      <SortableList 
+                  <div className="mb-2">
+                    
+                  { selectedAssetLayers && 
+                      <VerticalSortableList 
                         items={selectedAssetLayers} 
                         onChange={(e)=>updateAssetLayerOrder(e)}
-                        renderItem={item=>{
+                        renderItem={(item)=>{
                           return <>
-                            <SortableList.Item id={item.id}>
-                              <div className="grid grid-cols-3 gap-2 max-w-[300px]">
+                            <VerticalSortableList.Item id={item.id}>
+                              <div className="flex flex-row gap-4">
                                 <div>
-                                  <img src={item.url} alt="asset thumbnail" className="rounded-md w-32"/>
+                                  <p className="text-xs">ID: {item.id.toString()}</p>
+                                  <p className="text-xs">Type: {item.type}</p>
+                                  <button
+                                    value={item.id}
+                                    type="button"
+                                    className="rounded-full bg-orange-600 px-2.5 py-.5 text-xs font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    onClick={(e)=>{
+                                      let id= parseInt(e.currentTarget.value);
+                                      deleteAssetLayerData(id);
+                                    }}
+                                  >
+                                    Delete
+                                  </button>
                                 </div>
-                                <div>
-                                  <p className="text-xs">{item.type}</p>
+                                <div className="grow">
+                                  { item.type=="text" && <TextLayerDataFields assetData={assetLayerDataById(item.id)} /> }
+                                  { item.type=="asset" && <AssetLayerDataFields assetData={assetLayerDataById(item.id)} /> }
+                                  { item.type=="avatar" && <AvatarLayerDataFields assetData={assetLayerDataById(item.id)} />}
+                                  { item.type=="logo" && <LogoLayerDataFields assetData={assetLayerDataById(item.id)} />}
+                                  
                                 </div>
+                              </div>
                               
-                                
-                                  <div className="grid grid-rows-3 gap-2 ml-3">
-                                    <button
-                                      value={item.id}
-                                      type="button"
-                                      className="rounded-full bg-cyan-600 px-2.5 py-.5 text-xs font-semibold text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                      onClick={(e)=>{
-                                        let id= parseInt(e.currentTarget.value);
-                                        updateAssetLayerData(id);
-                                      }}
-                                    >
-                                      Edit
-                                    </button>
-                                    <button
-                                      value={item.id}
-                                      type="button"
-                                      className="rounded-full bg-orange-600 px-2.5 py-.5 text-xs font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                      onClick={(e)=>{
-                                        let id= parseInt(e.currentTarget.value);
-                                        deleteAssetLayerData(id);
-                                      }}
-                                    >
-                                      Delete
-                                    </button>
-                                  </div>
-                                  </div>
-                              
-                              <SortableList.DragHandle />
-                            </SortableList.Item>
+                              <VerticalSortableList.DragHandle />
+                            </VerticalSortableList.Item>
                           </>
                           }
                         }
                       />
                     }
-                    
       
 
 

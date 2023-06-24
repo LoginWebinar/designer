@@ -27,7 +27,6 @@ const UseRemoveDezziIdfromAvatar = () => {
           const _docData=data.dezzisSetsDocId as string[];
           
           const _filteredDocData = _docData.filter(data=> data !== dezziId)
-          console.log("FDD",_filteredDocData)
           const docData= {dezzisSetsDocId: _filteredDocData};
           await updateDoc(docRef,docData);
 

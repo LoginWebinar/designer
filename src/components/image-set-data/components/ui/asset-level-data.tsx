@@ -17,6 +17,8 @@ import DescriptionDropDown from "@/components/ui/description-drop-down";
 
 import UseGetImageSet from "../hooks/use-update-imageset";
 import UseGetDezziAsset from "../hooks/use-get-dezzi-asset";
+import UseUpdateImageSetAssetLayer from "../hooks/use-update-imageset-asset-layer";
+
 
 interface ChildProps {
   data:ThumbnailDataType[];
@@ -27,23 +29,52 @@ interface ChildProps {
 export default function AssetLevelData(props:ChildProps){
   const [ thumbnailData, setThumbnailData]=useState<ThumbnailDataType[]>(props.data);
   const [ saveThumbnailData, setSaveThumbnailData ] = useState(false);
+  const [ saveLayersData, setSaveLayersData ] = useState(false);
   const [ displayThumbnailUI, setDisplayThumbnailUI] = useState(false);
   const [ displayDuplicateUI, setDisplayDuplicateUI] = useState(false);
   const [ displayDeleteUI, setDisplayDeleteUI] = useState(false);
   const [ selectedThumbnailData, setSelectedThumbnailData ] = useState<ThumbnailDataType>();
-  const [ selectedAssetDocId, setSelectedAssetDocId ] = useState<String>("");
+  const [ selectedAssetDocId, setSelectedAssetDocId ] = useState("");
   const [ selectedAssetData, setSelectedAssetData ] = useState<ImageAssetDataType>();
   const [ selectedAssetLayers, setSelectedAssetLayers ] = useState<ImageAssetLayerDataType[]>();
 
   const updateImageSet = UseGetImageSet();
   const getDezziAsset = UseGetDezziAsset();
+  const updateImageSetAssetLayer = UseUpdateImageSetAssetLayer();
 
   useEffect(()=>{
-    if (saveThumbnailData){
-      updateThumbnails();
+    /**
+     * this will save the Thumbnail data to the table
+     * just set the setSaveThumbnailData to true
+     */
+    const saveThumbnailToFirestore = async ()=>{
+      let data = { thumbnails : thumbnailData};
+      await updateImageSet(props.docId, data);
       setSaveThumbnailData(()=>false);
     }
+
+    if (saveThumbnailData){
+      saveThumbnailToFirestore().catch(console.error);
+    }
   },[saveThumbnailData]);
+
+  useEffect(()=>{
+    /**
+     * this will save the Layers in the dezziDocid and the assets docid
+     * set the setSaveLayersData = true after updated the selectedAssetLayers
+     * in a function
+     */
+    const saveLayersToFirestore = async () =>{
+      let data = { layers : selectedAssetLayers};
+      await updateImageSetAssetLayer(props.docId,selectedAssetDocId,data);
+      setSaveLayersData(()=>false);
+    }
+
+    if (saveLayersData){
+      saveLayersToFirestore().catch(console.error);
+    }
+
+  },[saveLayersData]);
 
   const getAssetLayerData = async (assetDocId:string)=>{
     /**
@@ -53,7 +84,7 @@ export default function AssetLevelData(props:ChildProps){
     const assetLayers = await getDezziAsset(props.docId,assetDocId);
     console.log("Layers",assetLayers);
     setSelectedAssetData(()=>assetLayers);
-    setSelectedAssetLayers(()=>assetLayers?.layers);
+    setSelectedAssetLayers(()=>assetLayers!.layers);
   
   }
 
@@ -179,7 +210,7 @@ export default function AssetLevelData(props:ChildProps){
     setDisplayDeleteUI(()=>false);
   }
 
-  const updateThumbnails =() =>{
+  const updateThumbnails = () =>{
     let data = { thumbnails : thumbnailData};
     updateImageSet(props.docId, data);
   }
@@ -193,7 +224,49 @@ export default function AssetLevelData(props:ChildProps){
 
   function updateAssetLayerOrder(items:ImageAssetLayerDataType[]){
     setSelectedAssetLayers(()=>items);
-    //setSaveThumbnailData(()=>true);
+    setSaveLayersData(()=>true);
+  }
+
+  function AvatarLayerBlur(value:string,id:number|undefined,key:string){
+    let _updateData = selectedAssetLayers!.map(data=>{
+      if(data.id==id){
+        switch (key){
+          case "height":
+            return {...data,height:parseInt(value)}
+          case "xposition":
+            return {...data,xPosition:parseInt(value)}
+          case "yposition":
+            return {...data,yPosition:parseInt(value)}
+        }
+        
+      }else{
+        return {...data}
+      }
+    }) as unknown;
+    let updateData = _updateData as ImageAssetLayerDataType[];
+    setSelectedAssetLayers(()=>updateData);
+    setSaveLayersData(()=>true);
+  }
+
+  function LogoLayerBlur(value:string,id:number|undefined,key:string){
+    let _updateData = selectedAssetLayers!.map(data=>{
+      if(data.id==id){
+        switch (key){
+          case "height":
+            return {...data,height:parseInt(value)}
+          case "xposition":
+            return {...data,xPosition:parseInt(value)}
+          case "yposition":
+            return {...data,yPosition:parseInt(value)}
+        }
+        
+      }else{
+        return {...data}
+      }
+    }) as unknown;
+    let updateData = _updateData as ImageAssetLayerDataType[];
+    setSelectedAssetLayers(()=>updateData);
+    setSaveLayersData(()=>true);
   }
 
   return (
@@ -324,8 +397,8 @@ export default function AssetLevelData(props:ChildProps){
                                 <div className="grow">
                                   { item.type=="text" && <TextLayerDataFields assetData={assetLayerDataById(item.id)} /> }
                                   { item.type=="asset" && <AssetLayerDataFields assetData={assetLayerDataById(item.id)} /> }
-                                  { item.type=="avatar" && <AvatarLayerDataFields assetData={assetLayerDataById(item.id)} />}
-                                  { item.type=="logo" && <LogoLayerDataFields assetData={assetLayerDataById(item.id)} />}
+                                  { item.type=="avatar" && <AvatarLayerDataFields assetData={assetLayerDataById(item.id)} onBlur={AvatarLayerBlur} />}
+                                  { item.type=="logo" && <LogoLayerDataFields assetData={assetLayerDataById(item.id)} onBlur={LogoLayerBlur} />}
                                   
                                 </div>
                               </div>

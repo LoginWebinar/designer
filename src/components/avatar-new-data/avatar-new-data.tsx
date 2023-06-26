@@ -64,28 +64,29 @@ export default function AvatarNewData(props:ChildProps){
     } 
   }
 
-  async function saveAvatarToFireStore(){
-    /**
+  useEffect(()=>{
+
+    const saveAvatarToFireStore = async () =>{
+      /**
        * save the data into the Firestore table
        */
-    const x = await createAvatar(description,uploadedFaceURL,uploadedFullBodyURL,dndSecrets,gender,race)
-    if (x!=undefined){
-      const data:AvatarSetDataType = {
-        description:description,
-        objectID:x,
-        docId:x,
-        url:uploadedFullBodyURL,
-        faceUrl:uploadedFaceURL,
-      };
-      props.createdAvatarData(x,data);
+      const x = await createAvatar(description,uploadedFaceURL,uploadedFullBodyURL,dndSecrets,gender,race)
+      if (x!=undefined){
+        const data:AvatarSetDataType = {
+          description:description,
+          objectID:x,
+          docId:x,
+          url:uploadedFullBodyURL,
+          faceUrl:uploadedFaceURL,
+        };
+        props.createdAvatarData(x,data);
+      }
     }
 
-  }
-
-  useEffect(()=>{
     if (uploadedFullBodyURL!="" && uploadedFaceURL!=""){
       saveAvatarToFireStore();
     }
+    
   },[uploadedFullBodyURL,uploadedFaceURL])
 
   useEffect(()=>{

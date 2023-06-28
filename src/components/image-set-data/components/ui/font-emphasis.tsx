@@ -66,27 +66,32 @@ export default function FontEmphasis(props:ChildProps ) {
 
   useEffect(()=>{
     
-    let position=0;
-    if (props.value!=undefined){
-      position = props.value.search(_bold);
+    if(props.value=="" || props.value==undefined){
+      setTextBold(p=>false);
+      setTextSmCaps(p=>false);
+      setTextItalic(p=>false);
+      return;
     }
+
+    let position=0;
     
+    position = props.value.search(_bold);
     if (position!=-1){
       setTextBold(p=>true);
     }else{
       setTextBold(p=>false);
     }
-    if (props.value!=undefined){
-      position = props.value.search(_italic);
-    }
+
+    position=0;
+    position = props.value.search(_italic);
     if (position!=-1){
       setTextItalic(p=>true);
     }else{
       setTextItalic(p=>false);
     }
-    if (props.value!=undefined){
-      position = props.value.search(_smcap);
-    }
+
+    position=0;
+    position = props.value.search(_smcap);
     if (position!=-1){
       setTextSmCaps(p=>true);
     }else{

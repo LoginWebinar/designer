@@ -6,9 +6,10 @@ import { AvatarDataType } from "@/components/types/avatar-data-type";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 
 import SearchForAvatar from "../modals/search-for-avatar";
-import { AvatarSetDataType } from "@/components/types/avatar-set-data-type";
 import UpdateAvatarData from "../modals/update-avatar-data";
 import CreateAvatar from "../modals/create-avatar";
+
+import { AvatarSetDataType } from "@/components/types/avatar-set-data-type";
 
 import UseGetImageSet from "../hooks/use-update-imageset";
 import UseAddDezziIdToAvatar from "../hooks/use-add-dezzisid-to-avatar";

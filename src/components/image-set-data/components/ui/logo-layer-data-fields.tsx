@@ -10,9 +10,9 @@ interface ChildProps {
 }
 
 export default function LogoLayerDataFields(props:ChildProps){
-  const [ heightPosition, setHeightPosition] = useState(props.assetData?.height)
-  const [ xPosition, setXPosition ] = useState(props.assetData?.xPosition);
-  const [ yPosition, setYPosition ] = useState(props.assetData?.yPosition);
+  const [ heightPosition, setHeightPosition] = useState(props.assetData?.height || 0)
+  const [ xPosition, setXPosition ] = useState(props.assetData?.xPosition || 0);
+  const [ yPosition, setYPosition ] = useState(props.assetData?.yPosition || 0);
   const [ id, setId ] = useState(props.assetData?.id);
 
  
@@ -25,12 +25,17 @@ export default function LogoLayerDataFields(props:ChildProps){
           Height
         </label>
         <input
-          type="text"
+          type="number"
           name="height"
           value={heightPosition}
           className="block rounded-md px-1.5 w-full border-0 p-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-          placeholder=""
-          onChange={(e)=>setHeightPosition(parseInt(e.currentTarget.value))}
+          onChange={(e)=>{
+            let v = parseInt(e.currentTarget.value);
+            if (isNaN(v)){
+              v=0;
+            }
+            setHeightPosition(v);
+          }}
           onBlur={(e)=>props.onBlur(e.currentTarget.value,id,"height")}
         />
       </section>
@@ -39,12 +44,17 @@ export default function LogoLayerDataFields(props:ChildProps){
           X-Position
         </label>
         <input
-          type="text"
+          type="number"
           name="xposition"
           value={xPosition}
           className="block rounded-md px-1.5 w-full border-0 p-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-          placeholder=""
-          onChange={(e)=>setXPosition(parseInt(e.currentTarget.value))}
+          onChange={(e)=>{
+            let v = parseInt(e.currentTarget.value);
+            if (isNaN(v)){
+              v=0;
+            }
+            setXPosition(v);
+          }}
           onBlur={(e)=>props.onBlur(e.currentTarget.value,id,"xposition")}
         />
       </section>
@@ -53,12 +63,17 @@ export default function LogoLayerDataFields(props:ChildProps){
           Y-Position
         </label>
         <input
-          type="text"
+          type="number"
           name="yposition"
           value={yPosition}
           className="block rounded-md px-1.5 w-full border-0 p-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-          placeholder=""
-          onChange={(e)=>setYPosition(parseInt(e.currentTarget.value))}
+          onChange={(e)=>{
+            let v = parseInt(e.currentTarget.value);
+            if (isNaN(v)){
+              v=0;
+            }
+            setYPosition(v);
+          }}
           onBlur={(e)=>props.onBlur(e.currentTarget.value,id,"yposition")}
         />
       </section>

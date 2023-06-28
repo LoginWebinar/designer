@@ -15,7 +15,6 @@ import { FireStoreAvatarDataType } from "@/components/types/firestore-avatar-dat
 const UseAddDezziIdToAvatar = () => { 
 
   const addDezziIdToAvatar = async (avatarDocId:string, dezziId:string) =>{
-    console.log("AddDezz:",dezziId);
     const docRef = doc(db,"avatars",avatarDocId);
     
     try {

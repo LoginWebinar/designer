@@ -21,7 +21,7 @@
     "@types/react-dom": "18.2.4",
     "algoliasearch": "^4.17.1",
     "autoprefixer": "10.4.14",
-    "eslint-config-next": "13.4.4",
+    "eslint-config-next": "^12.0.4",
     "firebase": "^9.22.1",
     "formik": "^2.4.1",
     "headlessui": "^0.0.0",
@@ -41,10 +41,11 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.0.2",
     "@tailwindcss/typography": "^0.5.9",
     "eslint": "^8.42.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jsx-a11y": "^6.7.1",
-    "eslint-plugin-react": "^7.32.2"
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.25.3"
   }
 }

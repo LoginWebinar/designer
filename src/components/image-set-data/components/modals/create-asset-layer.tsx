@@ -2,7 +2,7 @@
 import React, { Fragment,useState,useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import FileUploadButton from "@/components/ui/file-upload-button";
-
+import SpinnerForButton from "@/components/spinners/spinner-for-button";
 
 
 interface ChildProps {
@@ -18,6 +18,7 @@ function CreateAssetLayer(props:ChildProps){
   const [ showAssetOptions, setShowAssetOptions ] = useState(false);
   const [ assetFile,setAssetFile] = useState<File | undefined>(undefined);
   const [ errorMessage, setErrorMessage ]= useState("");
+  const [buttonSpinnerVisible,setButtonSpinnerVisible] = useState(false);
   
   useEffect(()=>{
     /**
@@ -49,6 +50,7 @@ function CreateAssetLayer(props:ChildProps){
     /**
      * this occurs when the new avatar data has been saved
      */
+    setButtonSpinnerVisible(()=>true);
     if (type=="asset" && assetFile===undefined){
       setErrorMessage(()=>"Missing Image File");
       return;
@@ -97,7 +99,6 @@ function CreateAssetLayer(props:ChildProps){
                       </label>
                       <select
                         name="type"
-                        defaultValue="asset"
                         value={type}
                         className="block w-full rounded-md border-0 py-1 pl-3 pr-3 bg-gray-600 text-gray-200 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         onChange={(e)=>setType(e.currentTarget.value)}
@@ -125,7 +126,7 @@ function CreateAssetLayer(props:ChildProps){
                         className="inline-flex rounded-md bg-cyan-500 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-cyan-500 sm:w-auto"
                         onClick={() => createLayerData()}
                         >
-                          Continue
+                          <SpinnerForButton show={buttonSpinnerVisible}/> Continue
                       </button>
                       <button
                         type="button"

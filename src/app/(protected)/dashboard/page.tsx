@@ -9,7 +9,7 @@ import AlgoliaDezzieSetSearch from "../../../components/algolia-dezzieset-search
 import AlgoliaAvatarSetSearch from "../../../components/algolia-avatarset-search/algolia-avatarset-search";
 import ImageSetData from "@/components/image-set-data/image-set-data";
 import AvatarNewData from "@/components/avatar-new-data/avatar-new-data";
-
+import ImagesetNewData from "@/components/image-set-new-data/image-set-new-data";
 
 import { ImageSetDataType } from "../../../components/types/image-set-data-type";
 import { AvatarSetDataType } from "@/components/types/avatar-set-data-type";
@@ -27,6 +27,7 @@ export default function DashboardPage(){
   const [ showAvatars, setShowAvatars ] = useState(false);
   const [ showDezziSetData, setShowDezziSetData] = useState(false);
   const [ showNewAvatar, setShowNewAvatar] = useState(false);
+  const [ showNewImageset, setShowNewImageset] = useState(false);
   const [ imageSetDataToEdit, setImageSetDataToEdit] = useState<ImageSetDataType>();
   const [ imageSetDataDocId, setImageSetDataDocId] = useState("");
   const [ avatarSetDataToEdit, setAvatarSetDataToEdit ] = useState<AvatarSetDataType>();
@@ -35,7 +36,12 @@ export default function DashboardPage(){
 
   const toggleNewAvatarShowHandler = ()=>{
     setShowAvatars(()=>true);
-    setShowNewAvatar(p=>!p)
+    setShowNewAvatar(()=>false);
+  };
+
+  const toggleNewImagesetShowHandler = ()=>{
+    setShowDezziSets(()=>true);
+    setShowNewImageset(()=>false);
   };
 
   const router = useRouter();
@@ -55,10 +61,14 @@ export default function DashboardPage(){
     switch (pref){
       case "Avatars":
         setShowNewAvatar(()=>false);
-        setShowAvatars(()=>true);
+        setShowNewImageset(()=>false);
         setShowDezziSets(()=>false);
+        setShowDezziSetData(()=>false);
+        setShowAvatars(()=>true);
         break;
       default:
+        setShowNewImageset(()=>false);
+        setShowDezziSetData(()=>false);
         setShowNewAvatar(()=>false);
         setShowAvatars(()=>false);
         setShowDezziSets(()=>true);
@@ -74,10 +84,11 @@ export default function DashboardPage(){
      */
     setImageSetDataToEdit(()=>data);
     setImageSetDataDocId(()=>docId);
-    setShowDezziSetData(()=>true);
     setShowAvatars(()=>false);
     setShowNewAvatar(()=>false);
     setShowDezziSets(()=>false);
+    setShowNewImageset(()=>false);
+    setShowDezziSetData(()=>true);
   }
 
   function editAvatarWithId(docId:string,data:AvatarSetDataType){
@@ -100,7 +111,7 @@ export default function DashboardPage(){
     setShowAvatars(()=>false);
     setShowDezziSets(()=>false);
     setShowNewAvatar(()=>false);
-    setShowDezziSetData(()=>true);
+    setShowNewImageset(()=>true);
   }
 
   function createNewAvatarSet(){
@@ -109,6 +120,7 @@ export default function DashboardPage(){
      */
     setImageSetDataToEdit(()=>undefined);
     setImageSetDataDocId(()=>"");
+    setShowNewImageset(()=>false);
     setShowAvatars(()=>false);
     setShowDezziSets(()=>false);
     setShowDezziSetData(()=>false);
@@ -121,6 +133,22 @@ export default function DashboardPage(){
      */
     
   }
+
+  function createdImagesetData(docId:string,data:ImageSetDataType){
+    /**
+     * this function runs after a user creates a new avatar
+     */
+    setShowNewImageset(()=>false);
+    setImageSetDataToEdit(()=>data);
+    setImageSetDataDocId(()=>docId);
+    setShowAvatars(()=>false);
+    setShowNewAvatar(()=>false);
+    setShowDezziSets(()=>false);
+    setShowNewImageset(()=>false);
+    setShowDezziSetData(()=>true);
+
+  }
+  
 
   return(
     <>
@@ -141,6 +169,9 @@ export default function DashboardPage(){
             }
             { showNewAvatar &&
              <AvatarNewData toggleShow={toggleNewAvatarShowHandler} createdAvatarData={createdAvatarData}/>
+            }
+            { showNewImageset &&
+              <ImagesetNewData toggleShow={toggleNewImagesetShowHandler} createdDezziData={createdImagesetData}/>
             }
             
             

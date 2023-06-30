@@ -19,9 +19,19 @@ const UseGetDezziAsset = () => {
     try {
       const myImageSnapDetails = await getDoc(docRef);
       if(myImageSnapDetails.exists()) {
+        /**
+         * Data is found in the table, return the results
+         */
           const _data = myImageSnapDetails.data() as ImageAssetDataType;
           return _data;
+      }else{
+        /**
+         * data is not found, return an empty object
+         */
+        const _data = {} as ImageAssetDataType;
+        return _data;
       }
+
     }catch(error){
         console.log(error);
     }

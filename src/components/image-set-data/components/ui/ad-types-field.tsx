@@ -29,7 +29,7 @@ export default function AdTypesField(props:ChildProps){
       _mediumRectangle=false;
       setMediumRectangle(()=>false);
     }else{
-      _post=true;
+      _mediumRectangle=true;
       setMediumRectangle(()=>true);
     }
 

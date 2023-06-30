@@ -58,7 +58,7 @@ export default function AlgoliaDezzieSetSearch(props:ChildProps){
 
   return (
     <InstantSearch searchClient={searchClient} indexName="dezzi_sets" >
-      <div className="bg-gray-800 px-6 py-18 sm:py-24 lg:px-8">
+      <div className="px-6 py-6 mb-4 sm:py-8 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <div className="inline-flex">
             <h2 className="text-2xl font-bold tracking-tight text-white sm:text-4xl mr-4">Search for Dezzi Set</h2>
@@ -86,18 +86,14 @@ export default function AlgoliaDezzieSetSearch(props:ChildProps){
          
         </div>
       </div>
-      <div className="w-full grow lg:flex">
-        <div className="flex-1 xl:flex">
-          
-            <NoResultsBoundary fallback={"No results"} >
-            {showResults && 
-              <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
-                <Hits hitComponent={Hit}/>
-              </div>
-            }
-            </NoResultsBoundary>
-          
-        </div>
+      <div id="dezzi-hits" className="w-full flex flex-row flex-wrap justify-center">
+        <EmptyQueryBoundary fallback={""} >
+          <NoResultsBoundary fallback={"No results"} >
+          {showResults && 
+              <Hits hitComponent={Hit}/>
+          }
+          </NoResultsBoundary>
+        </EmptyQueryBoundary>
       </div>
     </InstantSearch>
   )

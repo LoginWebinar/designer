@@ -2,6 +2,7 @@
 import React, { Fragment,useState,useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import FileUploadButton from "@/components/ui/file-upload-button";
+import SpinnerForButton from "@/components/spinners/spinner-for-button";
 
 
 
@@ -18,6 +19,7 @@ function CreateAsset(props:ChildProps){
   const [ errorMessage, setErrorMessage ]= useState("");
   const [description, setDescription] = useState("Post");
   const [canvas, setCanvas] = useState("1200x1200");
+  const [buttonSpinnerVisible,setButtonSpinnerVisible] = useState(false);
 
   
   useEffect(()=>{
@@ -39,6 +41,7 @@ function CreateAsset(props:ChildProps){
     /**
      * this occurs when the new avatar data has been saved
      */
+    setButtonSpinnerVisible(()=>true);
     if (assetFile===undefined){
       setErrorMessage(()=>"Missing Image File");
       return;
@@ -126,7 +129,7 @@ function CreateAsset(props:ChildProps){
                         className="inline-flex rounded-md bg-cyan-500 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-cyan-500 sm:w-auto"
                         onClick={() => createAssetData()}
                         >
-                          Continue
+                          <SpinnerForButton show={buttonSpinnerVisible}/> Continue
                       </button>
                       <button
                         type="button"

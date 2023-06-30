@@ -227,7 +227,7 @@ export default function AssetLevelData(props:ChildProps){
     /**
      * occurs when a user clicks on Add a layer in the assets collection
      */
-    console.log("AddAssetLayer");
+    
     setShowAssetLayerModal(()=>true);
 
   }
@@ -448,6 +448,7 @@ export default function AssetLevelData(props:ChildProps){
     return _id;
   }
 
+ 
   function returnNextThumbnailID(){
     const len = thumbnailData!.length;
     let _id=1;
@@ -460,9 +461,46 @@ export default function AssetLevelData(props:ChildProps){
     return _id;
   }
 
-  function createAssetData(description:string,canvasSize:string,fileToUpload:File|undefined){
+  async function createAssetData(description:string,canvasSize:string,assetFile:File|undefined){
+    /**
+     * This runs after the viewer selects what type of asset to create. This function will
+     * save the information to the table.
+     */
+    const blankData={canvasSize:canvasSize,layers:[]} as ImageAssetDataType;
+    const newDocId = await addAssetToImageset(props.docId,selectedAssetDocId,blankData);
 
-    setShowAssetModal(()=>false);
+    /**
+     * now we need to update the Thumbnail data
+     */
+    const layerId = returnNextThumbnailID();
+    
+    /**
+     * the file needs to get uploaded and get the URL
+     */
+    if (assetFile!=undefined){
+      const uniqueId = nanoid();
+      const fileName = assetFile.name;
+      const uploadedFileName = uniqueId+"_"+fileName;
+      const fullFileLocationAndName = "/protected/images/"+props.docId+"/thumbnails/"+uploadedFileName;
+      const fileRef = ref(storage,fullFileLocationAndName);
+  
+      uploadBytes(fileRef, assetFile).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then(async(url) => {
+          const obj= {id:layerId,description:description,size:canvasSize,url:url,assetDocId:newDocId} as ThumbnailDataType;
+          let _thumbnailData = thumbnailData;
+          _thumbnailData.push(obj);
+          setThumbnailData(()=>_thumbnailData);
+          setSaveThumbnailData(()=>true);
+          setShowAssetModal(()=>false);
+        });
+      });
+    }else{
+      /**
+      * close the asset modal
+      */
+      setShowAssetModal(()=>false);
+    }
+     
   }
 
   function createAssetLayerData(assetType:string,assetFile:File|undefined ){

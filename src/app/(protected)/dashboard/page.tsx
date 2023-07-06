@@ -99,6 +99,7 @@ export default function DashboardPage(){
      */
     setAvatarSetDataToEdit(()=>data);
     setAvatarSetDataDocId(()=>docId);
+    console.log("data",data);
 
   }
 

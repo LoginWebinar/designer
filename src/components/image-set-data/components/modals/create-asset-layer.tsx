@@ -24,11 +24,12 @@ function CreateAssetLayer(props:ChildProps){
     /**
      * this will reset this page to default when this modal is opened
      */
-    if (props.show){
+    if (props.show==true){
       setAssetFile(()=>undefined);
       setType(()=>"asset");
       setShowAssetOptions(()=>true);
       setErrorMessage(()=>"");
+      setButtonSpinnerVisible(()=>false);
     }
    
   },[props.show])

@@ -29,8 +29,7 @@ export default function TextLayerDataFields(props:ChildProps){
     value=value.replace(/\s+/g,'');
     value=value.toLowerCase();
     let position=value.search("px");
-    console.log("fs",position);
-    if (position=-1){
+    if (position==-1){
       value=value+"px";
     }
     setFontSize(()=>value);
